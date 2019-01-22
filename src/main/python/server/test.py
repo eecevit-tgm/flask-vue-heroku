@@ -42,7 +42,7 @@ def abort_if_user_doesnt_exist(username):
         if username in user['username']:
             return position
         else:
-            abort(404, message="User {} doesn't exist".format(username))
+            abort(404, message="User {} doesn't exist")#.format(username))
         position += 1
 
 
