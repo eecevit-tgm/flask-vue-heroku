@@ -17,7 +17,7 @@
             <th>image</th>
           </thead>
           <tbody>
-            <tr style="border-bottom: 1px solid lightgray" v-for="(user, index) in Users" :key="index">
+            <tr v-for="(user, index) in Users" :key="index">
               <td>{{user.username}}</td>
               <td>{{user.email}}</td>
               <td>{{user.picture}}</td>
@@ -25,24 +25,6 @@
           </tbody>
         </table>
       </div>
-    <h2>User</h2>
-    <div class="table">
-      <table>
-          <thead>
-            <th>username</th>
-            <th>email</th>
-            <th>image</th>
-          </thead>
-          <tbody>
-            <tr style="border-bottom: 1px solid lightgray" v-for="(user, index) in User" :key="index">
-              <td>{{user.username}}</td>
-              <td>{{user.email}}</td>
-              <td>{{user.picture}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
     </div>
 </template>
 
@@ -52,8 +34,7 @@ import axios from "axios";
 export default {
   data(){
     return{
-        Users: [],
-        User:[]
+        Users: []
     };
   },
 
@@ -62,16 +43,10 @@ export default {
       axios.get("http://127.0.0.1:5000/users").then(res =>{
         this.Users = res.data
       })
-  },
-  getUser() {
-    axios.get("http://127.0.0.1:5000/users/eecevit ").then(res => {
-      this.User = res.data
-    })
   }
   },
   created() {
     this.getUsers()
-    this.getUser()
   }
 };
 </script>

@@ -6,16 +6,13 @@
 
 
 """
-from flask import Flask,jsonify
+from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_restful import reqparse, abort, Api, Resource
-
-# import jreader
+import json
 
 app = Flask(__name__)
 api = Api(app)
-# data = jreader
-
 CORS(app)
 
 """
@@ -25,9 +22,6 @@ CORS(app)
 .. moduleauthor:: Ecevit Emre Okan <github.com/eecevit-tgm>
 
 """
-import json
-
-users = ''
 
 """
 Lieset die Daten aus dem JSON File heraus
@@ -92,12 +86,15 @@ def abort_if_user_doesnt_exist(username):
             abort(404, message="User {} doesn't exist".format(username))
         position += 1
 
+
 parser = reqparse.RequestParser()
 parser.add_argument('user')
+parser.add_argument('username')
+parser.add_argument('email')
+parser.add_argument('picture')
 
 
 class User(Resource):
-
     def get(self, username):
         """
         **Get information of a specific user**
@@ -193,39 +190,35 @@ class UserList(Resource):
         return USERS
 
     def post(self):
-        """
-        **Create User Record**
+            """
+            **Create User Record**
+            This function allows user to create(post) a user record.
+            :return: user's information added by the user in json
+            - Example::
+                curl http://localhost:5000/user -d "name=newUser,newUser@mail.at,eecevit.jpg" -X POST -v
+            - Expected Success Response::
+                HTTP Status Code: 201
+                {
+                    "username": "newUser",
+                    "email": "newUser@mail.at",
+                    "picture": "....."
+                }
+            - Expected Fail Response::
+                HTTP Status Code: 400
+            """
+            args = parser.parse_args()
+            print(args)
+            id = len(USERS) + 1
+            name = args['user'].split(",")
+            # image = str(encoder.encode(name[2]))
+            image = name[2]
+            USERS[name[0]] = {'id': id, 'username': name[0], 'email': name[1], 'picture': image}
+            writer(USERS)
+            return USERS[name[0]], 201
 
-        This function allows user to create(post) a user record.
 
-        :return: user's information added by the user in json
-        - Example::
-            curl http://localhost:5000/user -d "name=newUser,newUser@mail.at,eecevit.jpg" -X POST -v
-        - Expected Success Response::
-            HTTP Status Code: 201
-            {
-                "username": "newUser",
-                "email": "newUser@mail.at",
-                "picture": "....."
-            }
-        - Expected Fail Response::
-            HTTP Status Code: 400
-        """
-        args = parser.parse_args()
-        id = len(USERS) + 1
-        name = args['user'].split(",")
-        # image = str(encoder.encode(name[2]))
-        image = name[2]
-        USERS[name[0]] = {'id': id, 'username': name[0], 'email': name[1], 'picture': image}
-        writer(USERS)
-        return USERS[name[0]], 201
-
-
-##
 ## Actually setup the Api resource routing here
-##
 api.add_resource(UserList, '/user')
-# api.add_resource(UserList, '/')
 api.add_resource(User, '/user/<username>')
 
 if __name__ == "__main__":
