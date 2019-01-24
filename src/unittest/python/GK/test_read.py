@@ -1,12 +1,12 @@
 import pytest
 
-import server.site
+import server.server
 
 
 @pytest.fixture
 def client():
-    server.site.app.testing = True
-    client = server.site.app.test_client()
+    server.server.app.testing = True
+    client = server.server.app.test_client()
     yield client
 
 

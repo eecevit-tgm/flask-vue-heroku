@@ -53,7 +53,7 @@ parser.add_argument('picture')
 
 
 # Todo
-# shows a single todo item and lets you delete a todo item
+# shows a single todo item and lets you     delete a todo item
 class Todo(Resource):
     def get(self, username):
         pos = abort_if_user_doesnt_exist(username)
