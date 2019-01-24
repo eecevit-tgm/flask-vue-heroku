@@ -19,25 +19,25 @@ Die detaillierte [Aufgabenstellung](TASK.md) beschreibt die notwendigen Schritte
 ```bash
 ├── sew5-simple-user-database-eecevit-tgm/
 │   ├── docs
-|   #wird nicht weiter verwendet
-|
+│   #wird nicht weiter verwendet
+│
 ├── restful_userservice.egg-info
-|   #wird nicht weiter verwendet
-|   
+│   #wird nicht weiter verwendet
+│   
 ├── src
-|   ├── main
-|   #in diesem Folder befindet sich der source code
-|   |   ├── java
-|   |   ├── python
-|   |   ├── vue
-|   ├── unittest
-|   #in diesm Folder befinden sich die Tests
+│   ├── main
+│   #in diesem Folder befindet sich der source code
+│   │   ├── java
+│   │   ├── python
+│   │   ├── vue
+│   ├── unittest
+│   #in diesm Folder befinden sich die Tests
 ├── tox.ini
-|   #für das automatisierte Testen
+│   #für das automatisierte Testen
 ├── requiremets 
-|   #beinhalten die Anfroderungen für das Tox - File
+│   #beinhalten die Anfroderungen für das Tox - File
 ├── .travis.yml
-|   #Travis file, damit Travis die Test durchführen kann
+│   #Travis file, damit Travis die Test durchführen kann
 ├── .gitignore
 ```
 
