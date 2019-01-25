@@ -116,8 +116,27 @@ Damit uUser auch ein Profilbild haben können, wurde eine Encoder [encoder.py](s
 
 ### VUEJs
 Hierbei wurde ```npm``` verwendet. 
-Um die fehlenden Packe nachinstallieren zu können, muss als erstes in den [vue](src/main/vue/) Ordner gewächselt werden. 
+Um die fehlenden Packe nachinstallieren zu können, muss als erstes in den [vue](src/main/vue/) Ordner gewächselt werden. Dort mit dem Befehl.
+```bash
+npm install
+```
+werden alle erfordeten NodeJS Packete installiert. 
+##### Server mit NPM Starten
+Damit nicht wieder zurück navigiert werden muss, wurde ein Command in [package.json](src/main/vue/package.json) erstellt. Um den Server zu starten muss folgendes eingegeben werden.
+```bash
+npm run server
+```
 
+Um nun den Client zu starten muss der Befehl
+```bash
+npm run dev
+```
+ausgeführt werden, dann sollten alles laden. Wenn alles richtig geladen wurde, kommt folgende Meldung.
+```bash
+ DONE  Compiled successfully in 2865ms                                   03:20:11
+
+ Your application is running here: http://localhost:8080
+```
 ### Java
 
 
