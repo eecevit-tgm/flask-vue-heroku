@@ -31,8 +31,13 @@ Die detaillierte [Aufgabenstellung](TASK.md) beschreibt die notwendigen Schritte
 │   ├── main
 │   #in diesem Folder befindet sich der source code
 │   │   ├── java
+│   │   #java UI ohne Gradle
+│   │   ├── java_gradle
+│   │   #java UI mit Gradle
 │   │   ├── python
+│   │   #python Server
 │   │   ├── vue
+│   │   #vue client
 │   ├── unittest
 │   #in diesm Folder befinden sich die Tests
 ├── tox.ini
