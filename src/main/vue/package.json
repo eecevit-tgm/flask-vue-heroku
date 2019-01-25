@@ -5,10 +5,12 @@
   "author": "eecevit",
   "private": true,
   "scripts": {
+    "cy:open": "cypress open",
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
     "build": "node build/build.js",
-    "test" : "cypress run"
+    "test" : "cypress run",
+     "server": "python ../python/server/server.py"
   },
   "dependencies": {
     "axios": "^0.18.0",

@@ -9,6 +9,9 @@
         4. [CMDBefehle](#Befehle)
         5. [Persistierung](#Persistierung)
         6. [Base-64Encoder](#Encoder)
+    2. [Clients](#Clients)
+        1. [VUEJs](#VUEJs)
+        2. [JavaFX](#Java)
 3. [Quellen](#Quellen)
 ## Aufgabenstellung
 Die detaillierte [Aufgabenstellung](TASK.md) beschreibt die notwendigen Schritte zur Realisierung.
@@ -109,6 +112,13 @@ Um CRUD Befehle auf die User im [user.json](src/main/python/server/user.json) au
 ### Encoder
 Damit uUser auch ein Profilbild haben können, wurde eine Encoder [encoder.py](src/main/python/server/encoder.py) geschrieben, welcher ein Bild in base64 encoded.
 
+## Client
+
+### VUEJs
+Hierbei wurde ```npm``` verwendet. 
+Um die fehlenden Packe nachinstallieren zu können, muss als erstes in den [vue](src/main/vue/) Ordner gewächselt werden. 
+
+### Java
 
 
 # Quellen

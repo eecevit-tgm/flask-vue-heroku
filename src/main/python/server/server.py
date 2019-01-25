@@ -9,11 +9,36 @@
 from flask import Flask
 from flask_cors import CORS
 from flask_restful import reqparse, abort, Api, Resource
-from server.jreader import reader, writer
+#from jreader import reader, writer
+import json
 
 app = Flask(__name__)
 api = Api(app)
 CORS(app)
+
+
+users = ''
+
+"""
+Lieset die Daten aus dem JSON File heraus
+"""
+with open('user.json', 'r') as f:
+
+     users = json.load(f)
+def reader():
+    """
+    Returns the User in the file
+    :return: the list of the user in the user.json file
+    """
+    return users
+def writer(user):
+    """
+    Writes the users into the JSON File
+    :param user: the users dict
+    """
+    users = user
+    with open('user.json', 'w') as f:
+        f.write(json.dumps(users))
 
 USERS = reader()
 
