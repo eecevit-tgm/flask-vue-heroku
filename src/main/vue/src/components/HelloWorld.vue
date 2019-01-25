@@ -27,7 +27,7 @@
       </div>
     <h2>User</h2>
     <div class="table">
-      <table>
+      <table class="table table-hover">
           <thead>
             <th>username</th>
             <th>email</th>
@@ -38,10 +38,75 @@
               <td>{{user.username}}</td>
               <td>{{user.email}}</td>
               <td>{{user.picture}}</td>
+              <td>
+                <button type="button"
+                        class="btn btn-warning btn-sm"
+                        v-b-modal.user-update-modal
+                        @click="editUser(user)">
+                    Update
+                </button>
+                <button type="button"
+                        class="btn btn-danger btn-sm"
+                        @click="onDeleteUser(user)">
+                    Delete
+                </button>
+              </td>
             </tr>
           </tbody>
         </table>
       </div>
+
+
+    <-- Edit Form Beginn-->
+    <b-modal ref="editUserModal"
+             id="user-update-modal"
+             title="Update"
+             hide-footer>
+      <b-form @submit="onSubmitUpdate" @reset="onResetUpdate" class="w-100">
+        <b-form-group id="form-title-edit-group"
+                      label="Title:"
+                      label-for="form-title-edit-input">
+          <b-form-input id="form-title-edit-input"
+                        type="text"
+                        v-model="editForm.title"
+                        required
+                        placeholder="Enter title">
+          </b-form-input>
+        </b-form-group>
+        <b-form-group id="form-username-edit-group"
+                      label="Username:"
+                      label-for="form-username-edit-input">
+          <b-form-input id="form-user-edit-input"
+                        type="text"
+                        v-model="editForm.user"
+                        required
+                        placeholder="Enter username">
+          </b-form-input>
+        </b-form-group>
+        <b-form-group id="form-mail-edit-group"
+                      label="E-Mail:"
+                      label-for="form-mail-edit-input">
+          <b-form-input id="form-mail-edit-input"
+                        type="text"
+                        v-model="editForm.mail"
+                        required
+                        placeholder="Enter E-Mail">
+          </b-form-input>
+        </b-form-group>
+          <b-form-group id="form-image-edit-group"
+                      label="Image:"
+                      label-for="form-image-edit-input">
+          <b-form-input id="form-image-edit-input"
+                        type="text"
+                        v-model="editForm.image"
+                        required
+                        placeholder="Enter Image">
+          </b-form-input>
+        </b-form-group>
+        <b-button type="submit" variant="primary">Update</b-button>
+        <b-button type="reset" variant="danger">Cancel</b-button>
+      </b-form>
+    </b-modal>
 
     </div>
 </template>
@@ -53,7 +118,14 @@ export default {
   data(){
     return{
         Users: [],
-        User:[]
+        User:[],
+      editForm: {
+        username: '',
+        mail: '',
+        image: '',
+      },
+      message: '',
+      showMessage: false,
     };
   },
 
@@ -67,7 +139,56 @@ export default {
     axios.get("http://127.0.0.1:5000/users/eecevit ").then(res => {
       this.User = res.data
     })
-  }
+  },
+      updateUser(username) {
+      const path = `http://localhost:5000/books/${username}`;
+      axios.put(path)
+        .then(() => {
+          this.getUsers();
+          this.message = 'User updated!';
+          this.showMessage = true;
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+          console.error(error);
+          this.getUser();
+        });
+    },
+    removeUser(username) {
+      const path = `http://localhost:5000/books/${username}`;
+      axios.delete(path)
+        .then(() => {
+          this.getBooks();
+          this.message = 'User removed!';
+          this.showMessage = true;
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+          console.error(error);
+          this.getUsers();
+        });
+
+    },
+    editUser(user) {
+      this.editForm = user;
+    },
+     onSubmitUpdate(evt) {
+      evt.preventDefault();
+      this.$refs.editUserModal.hide();
+      let read = false;
+      const payload = {
+        user: this.editForm.username,
+        author: this.editForm.mail,
+        price: this.editForm.image,
+      };
+      this.updateUser(this.editForm.username);
+    },
+    onResetUpdate(evt) {
+      evt.preventDefault();
+      this.$refs.editUserModal.hide();
+      this.initForm();
+      this.getUsers(); // why?
+    }
   },
   created() {
     this.getUsers()

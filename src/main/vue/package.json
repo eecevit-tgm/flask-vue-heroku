@@ -9,11 +9,12 @@
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
     "build": "node build/build.js",
-    "test" : "cypress run",
-     "server": "python ../python/server/server.py"
+    "test": "cypress run",
+    "server": "python ../python/server/server.py"
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "bootstrap-vue": "^2.0.0-rc.11",
     "cypress": "^3.1.4",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
