@@ -193,6 +193,11 @@ java src/WindowStarter
 ```
 Der Client gestartet werden. 
 
+##### Ausstehend
+[] Gradle verfollständigen
+
+[] Java Tests
+
 # Quellen
 #### [Python](https://docs.python.org/3/)
 

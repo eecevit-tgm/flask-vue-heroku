@@ -34,7 +34,6 @@ def test_addStartUser(client):
     assert res.json == [{"username": "eecevit", "email": "eecevit@student.tgm.ac.at", "picture": "ds"}]
 
 
-
 def test_readAll(client):
     res = client.get('/users')
     assert res.json == [{"username": "eecevit", "email": "eecevit@student.tgm.ac.at", "picture": "ds"}]
@@ -43,6 +42,13 @@ def test_readAll(client):
 def test_singleUser(client):
     res = client.get('/users/eecevit')
     assert res.json == [{"username": "eecevit", "email": "eecevit@student.tgm.ac.at", "picture": "ds"}]
+
+def test_singleUser(client):
+    client.post("/users", json=user01)
+    res = client.get('/users/test01').json[0]
+    assert (res['username'] == "test01") and (res['email'] == "test01@student.tgm.ac.at") and (res['picture'] == "Tester0123")
+    client.delete("/users/test01")
+
 
 def test_addUser(client):
     client.post("/users", json=user01)
@@ -62,6 +68,28 @@ def test_addMultiple(client):
     client.delete("/users/test01")
     client.delete("/users/test02")
 
+def test_addMultiple02(client):
+    client.post("/users", json=user01)
+    client.post("/users", json=user02)
+    client.post("/users", json=user03)
+    res01 = client.get("/users/test01").json[0]
+    res02 = client.get("/users/test02").json[0]
+    res03 = client.get("/users/test03").json[0]
+    assert (res01['username'] == "test01") and (res01['email'] == "test01@student.tgm.ac.at") and (res01['picture'] == "Tester0123") and\
+            (res02['username'] == "test02") and (res02['email'] == "test02@student.tgm.ac.at") and (res02['picture'] == "Tester0123")and \
+            (res03['username'] == "test03") and (res03['email'] == "test03@student.tgm.ac.at") and (res03['picture'] == "Tester0123")
+
+
+def tes_delteMultiple02(client):
+    client.delete("/users/test01")
+    client.delete("/users/test02")
+    client.delete("/users/test03")
+
+    res01=client.get('/users/test01')
+    res02=client.get('/users/test02')
+    res03=client.get('/users/test03')
+
+    assert b'{"message": "User {} doesn\'t exist"}\n' in res01.data and b'{"message": "User {} doesn\'t exist"}\n' in res02.data and b'{"message": "User {} doesn\'t exist"}\n' in res03.data
 
 
 def test_updateUser(client):
@@ -81,3 +109,4 @@ def test_deleteUser02(client):
     client.delete("/users/user01")
     res = client.get("/users")
     print(res.data)
+
