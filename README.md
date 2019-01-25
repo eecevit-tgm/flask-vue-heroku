@@ -16,6 +16,11 @@
 ## Aufgabenstellung
 Die detaillierte [Aufgabenstellung](TASK.md) beschreibt die notwendigen Schritte zur Realisierung.
 
+## CI Status
+CI | Build status
+:--- | :---
+Travis |  [![Build Status](https://travis-ci.com/eecevit-tgm/sew5-simple-user-database-eecevit-tgm.svg?token=GzEQUHXsQ6WHWhpRdqo4&branch=master)](https://travis-ci.com/eecevit-tgm/sew5-simple-user-database-eecevit-tgm)
+
 ## OrdnerStruktur
 
 
