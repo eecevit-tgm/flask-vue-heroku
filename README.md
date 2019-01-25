@@ -96,10 +96,10 @@ curl http://localhost:5000/user/<username>
 curl http://localhost:5000/user/<username> -X DELETE -v
 #löscht einen bestimmten User
 
-curl http://localhost:5000/user/<username> -d "username=newName" -d "email=mail@mail.com" -d "eecevit.jpg" -X PUT -v
+curl http://localhost:5000/user/<username> -d "username=newName" -d "email=mail@mail.com" -d "picture=eecevit.jpg" -X PUT -v
 #ändert die Werte zu einem bestimmten User
 
-curl http://localhost:5000/user -d "username=newName" -d"email=mail@mail.com" -d"eecevit.jpg" -X POST -v
+curl http://localhost:5000/user -d "username=newName" -d"email=mail@mail.com" -d"picture=eecevit.jpg" -X POST -v
 #erstellt einen neuen User
 ```
 ### Persistierung
@@ -109,14 +109,16 @@ Um CRUD Befehle auf die User im [user.json](src/main/python/server/user.json) au
 ### Encoder
 Damit uUser auch ein Profilbild haben können, wurde eine Encoder [encoder.py](src/main/python/server/encoder.py) geschrieben, welcher ein Bild in base64 encoded.
 
-Für die Dokumentierung wurde Sphinx verwendet.
 
-## Quellen
-[Python](https://docs.python.org/3/)
 
-[Flask](http://flask.pocoo.org/docs/1.0/quickstart/)
+# Quellen
+#### [Python](https://docs.python.org/3/)
 
-[Flask-Restful](https://flask-restful.readthedocs.io/en/latest/quickstart.html)
+#### [Flask](http://flask.pocoo.org/docs/1.0/quickstart/)
 
-[Sphinx](http://www.sphinx-doc.org/en/master/)
+#### [Flask-Restful](https://flask-restful.readthedocs.io/en/latest/quickstart.html)
+
+#### [Sphinx](http://www.sphinx-doc.org/en/master/)
+
+#### [Tox](https://tox.readthedocs.io/en/latest/)
 

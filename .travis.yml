@@ -18,7 +18,7 @@ matrix:
       - cd src/main/vue
       - npm ci
     script:
-      - python ../../main/python/server/site.py &
+      - python ../../main/python/server/server.py &
       - npm run dev &
       - npm test
 

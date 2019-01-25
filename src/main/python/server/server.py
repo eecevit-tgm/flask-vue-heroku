@@ -80,11 +80,10 @@ def abort_if_user_doesnt_exist(username):
     """
     position = 0
     for user in USERS:
-        if username in user['username']:
+        if username == user['username']:
             return position
-        else:
-            abort(404, message="User {} doesn't exist")  # .format(username))
         position += 1
+    abort(404, message="User {} doesn't exist")  # .format(username))
 
 
 parser = reqparse.RequestParser()
@@ -137,9 +136,9 @@ class Todo(Resource):
         - Expected Fail Response::
             HTTP Status Code: 404
         """
-        abort_if_user_doesnt_exist(username)
-        del USERS[username]
-        delete(username)
+        pos = abort_if_user_doesnt_exist(username)
+        del USERS[pos]
+        writer(USERS)
         return '', 204
 
     def put(self, username):
@@ -149,7 +148,7 @@ class Todo(Resource):
         :param username: name of the user
         :return: users's information updated
         - Example::
-            curl http://127.0.0.1:5000/user/eecevit -d "username=newName" -d"email=mail@mail.com" -d"eecevit.jpg" -X PUT -v
+            curl http://127.0.0.1:5000/user/eecevit -d "username=newName" -d"email=mail@mail.com" -d"picture=eecevit.jpg" -X PUT -v
         - Expected Success Response::
             HTTP Status Code: 201
             {
@@ -163,7 +162,9 @@ class Todo(Resource):
         args = parser.parse_args()
         # name = args['user'].split(",")
         user = {'username': args['username'], 'email': args['email'], 'picture': args['picture']}
-        USERS[username] = user
+        pos = abort_if_user_doesnt_exist(username)
+        USERS[pos] = user
+        writer(USERS)
         return user, 201
 
 
