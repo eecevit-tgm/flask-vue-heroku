@@ -62,6 +62,14 @@ Die detaillierte [Aufgabenstellung](TASK.md) beschreibt die notwendigen Schritte
     * [Tox](#Tox)
     * [PyTest](#)
 
+#### Flask
+Es wurde hierbei Flask verwendet, da es mit sehr wenig code, ein einfacher Server erstellt werden kann. Ebenso können alle HTTP Requests genau geroutet werden. Ebenso kann eingestellt werden, ob bei einem Request ein Parameter mitgeliefert werden soll. 
+
+**Flask**
+* bietet eine einfache REST Schnittstelle
+* einfaches routen
+* return kann beliebieg definiert werden
+
 #### ServerStarten
 Der Server kann mit dem Befehl aus dem Hauptfolder gestartet werden
 ```bash
@@ -83,7 +91,7 @@ Wenn es zu einer Fehlermeldung kommt, könnte es sein, dass der Port schon block
 Um die IP-Adresse oder den Port ändern zu können muss im Code etwas bearbeitet werden. 
 Hierführ muss in das Dokument [server.py](src/main/python/server/server.py) im Verzeichnis ```src/main/python/server/```
 
-Dort muss auf Zeile 223 muss folgender Code hinzugefügt werden```host="...",port="..."```.   
+Dort muss auf Zeile 223 muss folgender Code hinzugefügt werden ```host="...",port="..."```.   
 ```python
 if __name__ == '__main__':                  if __name__ == '__main__':
     app.run(debug=True)                             app.run(debug=True,host="0.0.0.0",port="5005")
@@ -120,6 +128,8 @@ Damit uUser auch ein Profilbild haben können, wurde eine Encoder [encoder.py](s
 ## Client
 
 ### VUEJs
+Es wurde VUEJs verwendet, da dieser einen sehr guten DOM - Support hat und die Objekte dynamisch erstellt, befüllt und bearbeitet werden können. 
+
 Hierbei wurde ```npm``` verwendet. 
 Um die fehlenden Packe nachinstallieren zu können, muss als erstes in den [vue](src/main/vue/) Ordner gewächselt werden. Dort mit dem Befehl.
 ```bash
@@ -150,11 +160,14 @@ Um die Port adresse für VUEJs zu ändern muss im [index.js](src/main/vue/config
 oder über die CLI mit dem Befehl
 
 #### Cypress.ioTesting
+Cypress ist ein simpler UI Tester, welcher nach Elementen sucht und mit denen dann interagiert. 
+
 Um die UI Testen zu können, wurde Cypress verwendet. 
 Um Cypress zu starten
 ```bash
 npm run cy:open
 ```
+Da öffnet sich ein Fenster, dort kann man das File [test.js](src/main/vue/cypress/integration/tests.js) ausführen. 
 
 ### Java
 ### UI
@@ -197,6 +210,8 @@ Der Client gestartet werden.
 [] Gradle verfollständigen
 
 [] Java Tests
+
+[] Java UI Update
 
 # Quellen
 #### [Python](https://docs.python.org/3/)
