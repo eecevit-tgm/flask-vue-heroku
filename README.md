@@ -149,9 +149,8 @@ Um die Requests Parsen zu können wurde ein eigener [Parser](src/main/java/src/P
 
 ### Deployment
 
-<div class="note">      
-    **NOTE**: [PythonServer](src/main/python/server/server.py) muss schon im Hintergrund laufen.
-</div>
+      
+**NOTE**: [PythonServer](src/main/python/server/server.py) muss schon im Hintergrund laufen.
 Zuerst muss in den [java](src/main/java) Ordner navigiert werden. 
 ```bash
 cd src/main/java
