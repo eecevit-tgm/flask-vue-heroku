@@ -137,6 +137,20 @@ ausgeführt werden, dann sollten alles laden. Wenn alles richtig geladen wurde, 
 
  Your application is running here: http://localhost:8080
 ```
+#### Port ändern
+Um die Port adresse für VUEJs zu ändern muss im [index.js](src/main/vue/config/index.js) File auf der Zeile 17 die Port Nummer geändert werden
+```js
+    port: 8080              ==>                   port:4034
+```
+oder über die CLI mit dem Befehl
+
+#### Cypress.ioTesting
+Um die UI Testen zu können, wurde Cypress verwendet. 
+Um Cypress zu starten
+```bash
+npm run cy:open
+```
+
 ### Java
 ### UI
 Es wurde ein weiterer Desktop Client geschrieben.
