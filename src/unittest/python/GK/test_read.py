@@ -18,6 +18,23 @@ def run_around_tests():
     file = open('user.json', "w+")
     file.write('[{"username": "eecevit", "email": "eecevit@student.tgm.ac.at", "picture": "ds"}]')
 
+def test_delAllUsersStart(client):
+    res = client.get("/users").json
+    length = len(res)
+    print(length)
+    for tester in res:
+        username = tester['username']
+        client.delete("/users/"+username)
+    res02 = client.get("users").json
+    assert len(res02) == 0
+
+def test_addStartUser(client):
+    client.post("/users", json={"username": "eecevit", "email": "eecevit@student.tgm.ac.at", "picture": "ds"})
+    res = client.get("/users/eecevit")
+    assert res.json == [{"username": "eecevit", "email": "eecevit@student.tgm.ac.at", "picture": "ds"}]
+
+
+
 def test_readAll(client):
     res = client.get('/users')
     assert res.json == [{"username": "eecevit", "email": "eecevit@student.tgm.ac.at", "picture": "ds"}]
