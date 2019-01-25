@@ -19,7 +19,7 @@ Die detaillierte [Aufgabenstellung](TASK.md) beschreibt die notwendigen Schritte
 ## CI Status
 CI | Build status | config file | Tests
 :--- | :--- | :--- | :---
-Travis |  [![Build Status](https://travis-ci.com/eecevit-tgm/sew5-simple-user-database-eecevit-tgm.svg?token=GzEQUHXsQ6WHWhpRdqo4&branch=master)](https://travis-ci.com/eecevit-tgm/sew5-simple-user-database-eecevit-tgm)| [.travis.yml](.travis.yml) | (pyTests)[src/unittest/python/GK/test_read.py] & (cypress)[src/main/vue/cypress/integration/tests.js]
+Travis |  [![Build Status](https://travis-ci.com/eecevit-tgm/sew5-simple-user-database-eecevit-tgm.svg?token=GzEQUHXsQ6WHWhpRdqo4&branch=master)](https://travis-ci.com/eecevit-tgm/sew5-simple-user-database-eecevit-tgm)| [.travis.yml](.travis.yml) | [pyTests](src/unittest/python/GK/test_read.py) / [Cypress](src/main/vue/cypress/integration/tests.js)
 
 ## OrdnerStruktur
 
