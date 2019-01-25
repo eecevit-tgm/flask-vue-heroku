@@ -138,8 +138,38 @@ ausgeführt werden, dann sollten alles laden. Wenn alles richtig geladen wurde, 
  Your application is running here: http://localhost:8080
 ```
 ### Java
-Es wurde ein weiterer Client geschrieben 
+### UI
+Es wurde ein weiterer Desktop Client geschrieben.
+Dieser wurde in [JavaFX](#JavaFx) mittels  [SceneBuilder](#SceneBuilder) erstellt.
 
+### Implementierung
+Die Verbindung auf die RestSchnittstelle wurde im [Connection.java](src/main/java/src/Connection.java) deklariert. Für die Requestst wurde das [java.net](https://docs.oracle.com/javase/8/docs/api/java/net/HttpURLConnection.html) Package verwendet. 
+
+Um die Requests Parsen zu können wurde ein eigener [Parser](src/main/java/src/Parser.java) geschrieben. Dieser verwedet [org.simple.json](http://alex-public-doc.s3.amazonaws.com/json_simple-1.1/index.html) Package. 
+
+### Deployment
+Zuerst muss in den [java](src/main/java) Ordner navigiert werden. 
+```bash
+cd src/main/java
+```
+
+#### Gradle
+Bei Gradle gibt es leider noch einige Errors. Die möglichen Befehle wären:
+```bash
+gradle build
+
+gradle run
+```
+#### JavaCMD
+man kann auch mit zwei einfachen Befehlen das Programm ausführen
+```bash
+javac src/WindowStarter.java
+```
+Dann wird das Class - File gebildetet, dannach kann mit
+```bash
+java src/WindowStarter
+```
+Der Client gestartet werden. 
 
 # Quellen
 #### [Python](https://docs.python.org/3/)
@@ -152,3 +182,8 @@ Es wurde ein weiterer Client geschrieben
 
 #### [Tox](https://tox.readthedocs.io/en/latest/)
 
+#### [JavaFX](https://wiki.openjdk.java.net/display/OpenJFX/Main)
+
+#### [SceneBuilder](https://www.oracle.com/technetwork/java/javase/downloads/javafxscenebuilder-info-2157684.html)
+
+#### [Cypress](https://www.cypress.io/)
