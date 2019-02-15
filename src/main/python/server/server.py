@@ -9,6 +9,7 @@
 from flask import Flask
 from flask_cors import CORS
 from flask_restful import reqparse, abort, Api, Resource
+from werkzeug.contrib import authdigest
 #from jreader import reader, writer
 import json
 
@@ -63,8 +64,12 @@ parser.add_argument('email')
 parser.add_argument('picture')
 
 
+authDB = FlaskRealmDigestDB('MyAuthRealm')
+authDB.add_user('admin', 'test')
+
 # Todo
-# shows a single todo item and lets you     delete a todo item
+# shows a single todo item and lets you delete a todo item
+@authDB.requires_auth
 class Todo(Resource):
     def get(self, username):
         """
