@@ -4,22 +4,25 @@
    :synopsis: Restful User-Service outgoing point
 .. moduleauthor:: Ecevit Emre Okan <github.com/eecevit-tgm>
 
-
 """
+
 from flask import Flask
 from flask_cors import CORS
 from flask_restful import reqparse, abort, Api, Resource
-from werkzeug.contrib import authdigest
-#from jreader import reader, writer
 import json
+import hashlib
 
 app = Flask(__name__)
 api = Api(app)
 CORS(app)
 
 
+"""
+==============================
+||       READ  USERS        ||
+==============================
+"""
 users = ''
-
 """
 Lieset die Daten aus dem JSON File heraus
 """
@@ -40,7 +43,35 @@ def writer(user):
     users = user
     with open('user.json', 'w') as f:
         f.write(json.dumps(users))
+"""
+==============================
+||     END READ  USERS      ||
+==============================
+"""
+"""
+==============================
+||       HASHING  PW        ||
+==============================
+"""
 
+
+def hash_password(password):
+    pw_hash = hashlib.sha256(password)
+    hex_dig = pw_hash.hexdigest()
+    return hex_dig
+
+
+def verify_password(password):
+    if hash_password(password) == password_hash:
+        return True
+    else:
+        return False
+
+"""
+==============================
+||    End of HASHING PW     ||
+==============================
+"""
 USERS = reader()
 
 
@@ -64,12 +95,11 @@ parser.add_argument('email')
 parser.add_argument('picture')
 
 
-authDB = FlaskRealmDigestDB('MyAuthRealm')
-authDB.add_user('admin', 'test')
+
+
 
 # Todo
 # shows a single todo item and lets you delete a todo item
-@authDB.requires_auth
 class Todo(Resource):
     def get(self, username):
         """
