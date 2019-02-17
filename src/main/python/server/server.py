@@ -6,11 +6,13 @@
 
 """
 
-from flask import Flask
+from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_restful import reqparse, abort, Api, Resource
 import json
 import hashlib
+
+from requests import auth
 
 app = Flask(__name__)
 api = Api(app)
@@ -59,7 +61,7 @@ def hash_password(password):
     pw_hash = hashlib.sha256(password)
     dig = pw_hash.hexdigest()
     return dig
-    
+
 
 def verify_password(password, username):
     for user in USERS:
@@ -98,11 +100,24 @@ parser.add_argument('picture')
 
 
 
+class AuthTest(Resource):
+    @auth.login_required
+    def get_resource(self):
+        return jsonify({'data': 'Hello, %s!' % g.user.username})
 
+    @auth.verify_password
+    def ver_pass(username, password):
+        for user in USERS:
+            if user['username'] == username:
+                if user['password'] == verify_password(password):
+                    return True
+                    g.user = user['username']
+        return False
 
 # Todo
 # shows a single todo item and lets you delete a todo item
 class Todo(Resource):
+
     def get(self, username):
         """
         **Get information of a specific user**
@@ -177,6 +192,7 @@ class Todo(Resource):
 
 
 class TodoList(Resource):
+
     def get(self):
         """
               **Get List of Users**
@@ -226,6 +242,8 @@ class TodoList(Resource):
 ##
 api.add_resource(TodoList, '/users')
 api.add_resource(Todo, '/users/<username>')
+api.add_resource(AuthTest, '/api/resource')
+
 
 
 if __name__ == '__main__':
