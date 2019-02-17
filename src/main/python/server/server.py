@@ -57,15 +57,17 @@ def writer(user):
 
 def hash_password(password):
     pw_hash = hashlib.sha256(password)
-    hex_dig = pw_hash.hexdigest()
-    return hex_dig
+    dig = pw_hash.hexdigest()
+    return dig
+    
 
-
-def verify_password(password):
-    if hash_password(password) == password_hash:
-        return True
-    else:
-        return False
+def verify_password(password, username):
+    for user in USERS:
+        if username == user['username']:
+            password_hash = user['password']
+            if hash_password(password) == password_hash:
+                return True
+    return False
 
 """
 ==============================
