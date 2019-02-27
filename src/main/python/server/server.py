@@ -7,6 +7,7 @@
 """
 
 from flask import Flask, jsonify
+from flask_httpauth import HTTPBasicAuth
 from flask_cors import CORS
 from flask_restful import reqparse, abort, Api, Resource
 import json
@@ -17,26 +18,29 @@ from requests import auth
 app = Flask(__name__)
 api = Api(app)
 CORS(app)
-
+auth = HTTPBasicAuth()
 
 """
 ==============================
 ||       READ  USERS        ||
 ==============================
 """
-users = ''
+
 """
 Lieset die Daten aus dem JSON File heraus
 """
 with open('user.json', 'r') as f:
+    users = json.load(f)
 
-     users = json.load(f)
+
 def reader():
     """
     Returns the User in the file
     :return: the list of the user in the user.json file
     """
     return users
+
+
 def writer(user):
     """
     Writes the users into the JSON File
@@ -45,6 +49,7 @@ def writer(user):
     users = user
     with open('user.json', 'w') as f:
         f.write(json.dumps(users))
+
 """
 ==============================
 ||     END READ  USERS      ||
@@ -58,7 +63,7 @@ def writer(user):
 
 
 def hash_password(password):
-    pw_hash = hashlib.sha256(password)
+    pw_hash = hashlib.sha256(password.encode('utf-8'))
     dig = pw_hash.hexdigest()
     return dig
 
@@ -69,7 +74,9 @@ def verify_password(password, username):
             password_hash = user['password']
             if hash_password(password) == password_hash:
                 return True
-    return False
+            else:
+                return False
+
 
 """
 ==============================
@@ -77,7 +84,7 @@ def verify_password(password, username):
 ==============================
 """
 USERS = reader()
-
+isAdmin = False
 
 def abort_if_user_doesnt_exist(username):
     """
@@ -93,31 +100,40 @@ def abort_if_user_doesnt_exist(username):
     abort(404, message="User {} doesn't exist")  # .format(username))
 
 
+USER_DATA = {
+    "admin": "SuperSecretPwd",
+    "test": "test"
+}
+
 parser = reqparse.RequestParser()
 parser.add_argument('username')
 parser.add_argument('email')
 parser.add_argument('picture')
 
 
-
-class AuthTest(Resource):
-    @auth.login_required
-    def get_resource(self):
-        return jsonify({'data': 'Hello, %s!' % g.user.username})
-
-    @auth.verify_password
-    def ver_pass(username, password):
-        for user in USERS:
-            if user['username'] == username:
-                if user['password'] == verify_password(password):
-                    return True
-                    g.user = user['username']
+@auth.verify_password
+def verify(username, password):
+    if not (username and password):
         return False
+    for user in USERS:
+        if user['username'] == username:
+            if verify_password(password, username):
+                checkAdmin(username)
+                return True
+
+
+def checkAdmin(check):
+    if check == "evet":
+        isAdmin = True
+    else:
+        isAdmin = False
+
 
 # Todo
 # shows a single todo item and lets you delete a todo item
 class Todo(Resource):
 
+    @auth.login_required
     def get(self, username):
         """
         **Get information of a specific user**
@@ -141,6 +157,7 @@ class Todo(Resource):
         pos = abort_if_user_doesnt_exist(username)
         return [USERS[pos]]
 
+    @auth.login_required
     def delete(self, username):
         """
         **Delete User Record**
@@ -159,11 +176,13 @@ class Todo(Resource):
         - Expected Fail Response::
             HTTP Status Code: 404
         """
-        pos = abort_if_user_doesnt_exist(username)
-        del USERS[pos]
-        writer(USERS)
-        return '', 204
+        if isAdmin:
+            pos = abort_if_user_doesnt_exist(username)
+            del USERS[pos]
+            writer(USERS)
+            return '', 204
 
+    @auth.login_required
     def put(self, username):
         """
          **Update Information of a Specific User Record**
@@ -182,17 +201,19 @@ class Todo(Resource):
         - Expected Fail Response::
             HTTP Status Code: 404
         """
-        args = parser.parse_args()
-        # name = args['user'].split(",")
-        user = {'username': args['username'], 'email': args['email'], 'picture': args['picture']}
-        pos = abort_if_user_doesnt_exist(username)
-        USERS[pos] = user
-        writer(USERS)
-        return user, 201
+        if isAdmin:
+            args = parser.parse_args()
+            # name = args['user'].split(",")
+            user = {'username': args['username'], 'email': args['email'], 'picture': args['picture'], 'password': hash_password(args['password'])}
+            pos = abort_if_user_doesnt_exist(username)
+            USERS[pos] = user
+            writer(USERS)
+            return user, 201
 
 
 class TodoList(Resource):
 
+    @auth.login_required
     def get(self):
         """
               **Get List of Users**
@@ -211,6 +232,7 @@ class TodoList(Resource):
         """
         return USERS
 
+    @auth.login_required
     def post(self):
         """
                  **Create User Record**
@@ -242,9 +264,6 @@ class TodoList(Resource):
 ##
 api.add_resource(TodoList, '/users')
 api.add_resource(Todo, '/users/<username>')
-api.add_resource(AuthTest, '/api/resource')
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)

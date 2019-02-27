@@ -2,11 +2,39 @@
 
   <div class="container">
     <div class="row">
+            <div class="col-sm-10">
+                      <h1>Login</h1>
+              <table class="table table-hover">
+                <thead>
+                <tr>
+                  <th scope="col">Username</th>
+                  <th scope="col">Password</th>
+                <th></th>
+                </tr>
+                </thead>
+                  <tbody>
+                    <td><input ref="loginname" placeholder="username"></td>
+                    <td><input type="password" ref="loginpass" placeholder="password"></td>
+                    <td><button type="button"
+                                class="btn btn-primary btn-sm"
+                                @click="login()">
+                        Login
+                        </button>
+                    </td>
+                  </tbody>
+              </table>
+
+            </div>
       <div class="col-sm-10">
         <h1>Users</h1>
         <hr><br><br>
         <alert :message=message v-if="showMessage"></alert>
-        <button type="button" class="btn btn-success btn-sm" v-b-modal.user-modal>Add User</button>
+        <button type="button"
+                class="btn btn-success btn-sm"
+                v-b-modal.user-modal
+                v-if=show>
+                Add User
+        </button>
         <br><br>
 
         <!-- users table -->
@@ -16,6 +44,7 @@
               <th scope="col">Username</th>
               <th scope="col">E-Mail</th>
               <th scope="col">Image</th>
+              <th scope="col">Rights</th>
               <th></th>
             </tr>
           </thead>
@@ -24,15 +53,19 @@
               <td>{{ user.username }}</td>
               <td>{{ user.email }}</td>
               <td>{{ user.picture }}</td>
+              <td>{{ user.admin }}</td>
+
               <td>
                 <button type="button"
                         class="btn btn-warning btn-sm"
                         v-b-modal.user-update-modal
+                        v-if=show
                         @click="editUser(user)">
                     Update
                 </button>
                 <button type="button"
                         class="btn btn-danger btn-sm"
+                        v-if=show
                         @click="onDeleteUser(user)">
                     Delete
                 </button>
@@ -139,11 +172,14 @@ export default {
         username: '',
         email: '',
         done: '',
+        admin: '',
       },
+      show: false,
       editForm: {
         username: '',
         email: '',
         picture: '',
+        admin: '',
       },
       message: '',
       showMessage: false,
@@ -155,7 +191,12 @@ export default {
   methods: {
     getUsers() {
       const path = 'http://localhost:5000/users';
-      axios.get(path)
+      axios.get(path, {
+        auth: {
+          username: this.username,
+          password: this.password,
+        },
+      })
         .then((res) => {
           this.users = res.data;
         })
@@ -213,6 +254,8 @@ export default {
       this.editForm.username = '';
       this.editForm.email = '';
       this.editForm.picture = '';
+      this.username = '';
+      this.password = '';
     },
     onSubmit(evt) {
       evt.preventDefault();
@@ -251,6 +294,16 @@ export default {
     },
     editUser(user) {
       this.editForm = user;
+    },
+    login() {
+      this.username = this.$refs.loginname.value;
+      this.password = this.$refs.loginpass.value;
+      this.getUsers();
+      this.check();
+    },
+    check() {
+      console.log(this.show);
+      this.show = true;
     },
   },
   created() {
