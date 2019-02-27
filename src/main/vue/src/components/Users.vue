@@ -302,8 +302,21 @@ export default {
       this.check();
     },
     check() {
-      console.log(this.show);
-      this.show = true;
+      const path = `http://localhost:5000/user/${this.username}`;
+      axios.get(path)
+        .then((res) => {
+          if (res.data[0] === 'evet') {
+            this.show = true;
+          }
+          else {
+            this.show = false;
+          }
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+          console.error(error);
+        });
+      // console.log(this.user.admin);
     },
   },
   created() {

@@ -50,6 +50,7 @@ def writer(user):
     with open('user.json', 'w') as f:
         f.write(json.dumps(users))
 
+
 """
 ==============================
 ||     END READ  USERS      ||
@@ -85,6 +86,7 @@ def verify_password(password, username):
 """
 USERS = reader()
 isAdmin = False
+
 
 def abort_if_user_doesnt_exist(username):
     """
@@ -131,6 +133,13 @@ def checkAdmin(check):
 
 # Todo
 # shows a single todo item and lets you delete a todo item
+
+class Admin(Resource):
+    def get(self, username):
+        pos = abort_if_user_doesnt_exist(username)
+        return [USERS[pos]['admin']]
+
+
 class Todo(Resource):
 
     @auth.login_required
@@ -204,7 +213,8 @@ class Todo(Resource):
         if isAdmin:
             args = parser.parse_args()
             # name = args['user'].split(",")
-            user = {'username': args['username'], 'email': args['email'], 'picture': args['picture'], 'password': hash_password(args['password'])}
+            user = {'username': args['username'], 'email': args['email'], 'picture': args['picture'],
+                    'password': hash_password(args['password'])}
             pos = abort_if_user_doesnt_exist(username)
             USERS[pos] = user
             writer(USERS)
@@ -264,6 +274,7 @@ class TodoList(Resource):
 ##
 api.add_resource(TodoList, '/users')
 api.add_resource(Todo, '/users/<username>')
+api.add_resource(Admin, '/user/<username>')
 
 if __name__ == '__main__':
     app.run(debug=True)
