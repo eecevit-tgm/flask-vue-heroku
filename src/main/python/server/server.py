@@ -6,18 +6,14 @@
 
 """
 
-from flask import Flask, jsonify
+from flask import Flask
 from flask_httpauth import HTTPBasicAuth
-from flask_cors import CORS
 from flask_restful import reqparse, abort, Api, Resource
 import json
 import hashlib
 
-from requests import auth
-
 app = Flask(__name__)
 api = Api(app)
-CORS(app)
 auth = HTTPBasicAuth()
 
 """
@@ -277,4 +273,4 @@ api.add_resource(Todo, '/users/<username>')
 api.add_resource(Admin, '/user/<username>')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
