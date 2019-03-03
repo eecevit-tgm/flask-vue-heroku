@@ -1,0 +1,26 @@
+{
+  "name": "deploy",
+  "version": "1.0.0",
+  "description": "A Deployment for CRUF",
+  "main": "server.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eecevit-tgm/sew5-simple-user-database-eecevit-tgm.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eecevit-tgm/sew5-simple-user-database-eecevit-tgm/issues"
+  },
+  "homepage": "https://github.com/eecevit-tgm/sew5-simple-user-database-eecevit-tgm#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
