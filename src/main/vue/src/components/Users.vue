@@ -307,8 +307,7 @@ export default {
         .then((res) => {
           if (res.data[0] === 'evet') {
             this.show = true;
-          }
-          else {
+          } else {
             this.show = false;
           }
         })
