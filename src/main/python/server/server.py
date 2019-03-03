@@ -7,12 +7,14 @@
 """
 
 from flask import Flask
+from flask_cors import CORS
 from flask_httpauth import HTTPBasicAuth
 from flask_restful import reqparse, abort, Api, Resource
 import json
 import hashlib
 
 app = Flask(__name__)
+CORS(app)
 api = Api(app)
 auth = HTTPBasicAuth()
 
