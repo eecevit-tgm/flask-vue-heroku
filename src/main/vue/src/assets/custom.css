@@ -1,0 +1,9 @@
+
+.my-image{
+  padding: 0.15rem;
+  background-color: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 0.15rem;
+  max-width: 50%;
+  height: auto;
+}

@@ -109,6 +109,10 @@ parser = reqparse.RequestParser()
 parser.add_argument('username')
 parser.add_argument('email')
 parser.add_argument('picture')
+parser.add_argument('password')
+parser.add_argument('admin')
+
+
 
 
 @auth.verify_password
@@ -123,7 +127,7 @@ def verify(username, password):
 
 
 def checkAdmin(check):
-    if check == "evet":
+    if check:
         isAdmin = True
     else:
         isAdmin = False
@@ -185,6 +189,7 @@ class Todo(Resource):
         """
         if isAdmin:
             pos = abort_if_user_doesnt_exist(username)
+            
             del USERS[pos]
             writer(USERS)
             return '', 204
@@ -262,7 +267,7 @@ class TodoList(Resource):
         # user_id = int(max(USERS.keys()).lstrip('user')) + 1
         # user_id = 'user%i' % user_id
         user_id = len(USERS)
-        USERS.append({'username': args['username'], 'email': args['email'], 'picture': args['picture']})
+        USERS.append({'username': args['username'], 'email': args['email'], 'picture': args['picture'], 'password': hash_password(args['password']), 'admin': args['admin']})
         writer(USERS)
         return USERS[user_id], 201
 

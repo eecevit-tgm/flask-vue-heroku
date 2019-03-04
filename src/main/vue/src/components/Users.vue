@@ -38,23 +38,23 @@
         <br><br>
 
         <!-- users table -->
-        <table class="table table-hover">
+        <table class="table table-hover ">
           <thead>
             <tr>
+              <th scope="col">Image</th>
               <th scope="col">Username</th>
               <th scope="col">E-Mail</th>
-              <th scope="col">Image</th>
               <th scope="col">Rights</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(user, index) in users" :key="index">
+              <td><img :src="user.picture "
+                                   class="rounded-circle" width="50" height="50"/></td>
               <td>{{ user.username }}</td>
               <td>{{ user.email }}</td>
-              <td>{{ user.picture }}</td>
               <td>{{ user.admin }}</td>
-
               <td>
                 <button type="button"
                         class="btn btn-warning btn-sm"
@@ -113,6 +113,21 @@
                         placeholder="Enter Image">
           </b-form-input>
         </b-form-group>
+        <b-form-group id="form-password-group"
+                      label="Password:"
+                      label-for="form-password-input">
+          <b-form-input id="form-password-input"
+                        type="password"
+                        v-model="addUserForm.password"
+                        required
+                        placeholder="Enter Password">
+          </b-form-input>
+        </b-form-group>
+        <b-form-group id="form-admin-group">
+            <b-form-checkbox-group v-model="addUserForm.admin" id="form-checks">
+              <b-form-checkbox value="true">Admin?</b-form-checkbox>
+            </b-form-checkbox-group>
+        </b-form-group>
         <b-button type="submit" variant="primary">Submit</b-button>
         <b-button type="reset" variant="danger">Reset</b-button>
       </b-form>
@@ -153,6 +168,16 @@
                         placeholder="Enter Image">
           </b-form-input>
         </b-form-group>
+        <b-form-group id="form-password-edit-group"
+                      label="Password:"
+                      label-for="form-password-edit-input">
+          <b-form-input id="form-password-edit-input"
+                        type="password"
+                        v-model="editForm.password"
+                        required
+                        placeholder="Enter password">
+          </b-form-input>
+        </b-form-group>
         <b-button type="submit" variant="primary">Update</b-button>
         <b-button type="reset" variant="danger">Cancel</b-button>
       </b-form>
@@ -171,18 +196,21 @@ export default {
       addUserForm: {
         username: '',
         email: '',
-        done: '',
-        admin: '',
+        password: '',
+        admin: false,
       },
       show: false,
       editForm: {
         username: '',
         email: '',
         picture: '',
+        password: '',
         admin: '',
       },
       message: '',
       showMessage: false,
+      uname: '',
+      pass: '',
     };
   },
   components: {
@@ -193,8 +221,8 @@ export default {
       const path = 'http://localhost:5000/users';
       axios.get(path, {
         auth: {
-          username: this.username,
-          password: this.password,
+          username: this.uname,
+          password: this.pass,
         },
       })
         .then((res) => {
@@ -207,7 +235,12 @@ export default {
     },
     addUser(payload) {
       const path = 'http://localhost:5000/users';
-      axios.post(path, payload)
+      axios.post(path, payload, {
+        auth: {
+          username: this.uname,
+          password: this.pass,
+        },
+      })
         .then(() => {
           this.getUsers();
           this.message = 'User added!';
@@ -220,8 +253,13 @@ export default {
         });
     },
     updateUser(payload, userID) {
-      const path = `http://localhost:5000/users/${userID}`;
-      axios.put(path, payload)
+      const path = `https://eecevit-flask.herokuapp.com/users/${userID}`;
+      axios.put(path, payload, {
+        auth: {
+          username: this.uname,
+          password: this.pass,
+        },
+      })
         .then(() => {
           this.getUsers();
           this.message = 'User updated!';
@@ -235,7 +273,12 @@ export default {
     },
     removeUser(userID) {
       const path = `http://localhost:5000/users/${userID}`;
-      axios.delete(path)
+      axios.delete(path, {
+        auth: {
+          username: this.uname,
+          password: this.pass,
+        },
+      })
         .then(() => {
           this.getUsers();
           this.message = 'User removed!';
@@ -251,11 +294,13 @@ export default {
       this.addUserForm.username = '';
       this.addUserForm.email = '';
       this.addUserForm.picture = '';
+      this.addUserForm.password = '';
+      this.addUserForm.admin = false;
       this.editForm.username = '';
       this.editForm.email = '';
       this.editForm.picture = '';
-      this.username = '';
-      this.password = '';
+      this.editForm.password = '';
+      this.editForm.admin = false;
     },
     onSubmit(evt) {
       evt.preventDefault();
@@ -263,7 +308,9 @@ export default {
       const payload = {
         username: this.addUserForm.username,
         email: this.addUserForm.email,
-        picture: this.addUserForm.picture, // property shorthand
+        picture: this.addUserForm.picture,
+        password: this.addUserForm.password,
+        admin: this.addUserForm.admin,
       };
       this.addUser(payload);
       this.initForm();
@@ -274,7 +321,9 @@ export default {
       const payload = {
         username: this.editForm.username,
         email: this.editForm.email,
-        picture: this.editForm.picture, // property shorthand
+        picture: this.editForm.picture,
+        password: this.addUserForm.password,
+        admin: this.addUserForm.admin,
       };
       this.updateUser(payload, this.editForm.username);
     },
@@ -296,16 +345,18 @@ export default {
       this.editForm = user;
     },
     login() {
-      this.username = this.$refs.loginname.value;
-      this.password = this.$refs.loginpass.value;
+      this.uname = '';
+      this.pass = '';
+      this.uname = this.$refs.loginname.value;
+      this.pass = this.$refs.loginpass.value;
       this.getUsers();
       this.check();
     },
     check() {
-      const path = `http://localhost:5000/user/${this.username}`;
+      const path = `http://localhost:5000/user/${this.uname}`;
       axios.get(path)
         .then((res) => {
-          if (res.data[0] === 'evet') {
+          if (res.data[0] === 'true') {
             this.show = true;
           } else {
             this.show = false;
