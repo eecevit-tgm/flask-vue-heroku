@@ -178,10 +178,10 @@
                         placeholder="Enter password">
           </b-form-input>
         </b-form-group>
-        <b-form-group id="form-admin-edit-group">
-            <b-form-checkbox-group v-model="addUserForm.admin" id="form-edit-checks">
-              <b-form-checkbox value="true">Admin?</b-form-checkbox>
-            </b-form-checkbox-group>
+         <b-form-group id="form-admin-edit-group">
+          <b-form-checkbox-group v-model="editForm.admin" id="form-checks">
+            <b-form-checkbox value="true">Admin?</b-form-checkbox>
+          </b-form-checkbox-group>
         </b-form-group>
         <b-button type="submit" variant="primary">Update</b-button>
         <b-button type="reset" variant="danger">Cancel</b-button>
