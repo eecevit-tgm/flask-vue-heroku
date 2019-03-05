@@ -13,10 +13,17 @@
         1. [VUEJs](#VUEJs)
         2. [JavaFX](#Java)
     3.  [Authentifizierung](#Authentifizierung)
-        1.  [Flask](#Flask)
+        1.  [Flask](#FlaskAuth)
             1. [HTTPBasicAuth](#HTTPBasicAuth)
             2.  [Passwort](#Passwort)
             3.  [Admin](#Admin)
+        2.  [Vue](#Vue)
+            1.  [Login](#Login)
+            2.  [axios](#axios)
+3.  [Deployment](#Deployment)
+    1.  [Heroku](#Heroku)
+        1.  [Implementierung](#Implementierung)
+            1.  [Flask](#FlaskDeployment)
 3. [Quellen](#Quellen)
 ## Aufgabenstellung
 Die detaillierte [Aufgabenstellung](TASK.md) beschreibt die notwendigen Schritte zur Realisierung.
@@ -224,7 +231,7 @@ Der Client gestartet werden.
 [] Java UI Update
 
 ## Authentifizierung
-### Flask
+### FlaskAuth
 #### HTTPBasicAuth
 Um eine Authentifizierung bei Flask durchführen zu können, wurde die Annotation
 `@auth.login_required`
@@ -288,6 +295,71 @@ def checkAdmin(username):
 Hierbei wird ein username verlang, dann wird überpüft ob der Benutzer existiert. Wenn dieser existiert, 
 dann wird überprüft, ob dieser `admin` rechte hat. 
 
+### Vue
+Da nun bei `Flask` eine Authentifizierung erfordert wird, kann nicht mehr wie vorher beliebig ein 
+`pul || push || delete` Befehl ausgeführt werden. 
+#### Login
+Daher wird ein Login benötigt. 
+![Loginfelnd](images/login.png)
+
+Dieser speichert den `Usernamen` und das `Passwort`, dannach können wieder wie vorher `pul || push || delete` Befehl ausgeführt werden.
+
+#### axios
+Bei Axios gibt es die Möglichkeit, eine Authentifizierung mitzusenden. Hierbei muss nach der URL
+der Befehl,
+```vue
+auth: {
+          username: username,
+          password: password,
+        },
+```
+beigefügt werden.
+
+Hierbei wird der gespeicherte `Username` und das gespeicherte `Passwort` mitgesendet. 
+
+# Deployment
+## Heroku
+Damit jeder die Software verwenden kann, wurde diese auf [Heroku](https://www.heroku.com/) geladen.
+
+Als erstes muss die [Heroku - CLI](https://devcenter.heroku.com/articles/getting-started-with-python#set-up) heruntergeladen und installiert werden. 
+Dannach muss mit dem Befehl:
+```bash
+heroku login
+```
+Muss sich der User verifizieren. 
+### Implementierung
+#### FlaskDeployment
+Als erstes gehen wir durch, wie ein `Python FLASK` Applikation auf [Heroku](https://www.heroku.com/) 
+deplyed werden kann.
+
+1. git initalisieren 
+    ```bash
+    git init
+    ```
+2. Heroku create
+    Dannch mit dem Befehl 
+    ```bash
+    heroku create eecevit-flask
+    ```
+    wobei statt `eecevit-flask` soll der beliebige Projektname eingefügt werden. 
+3. requirements
+    Damit Heroku die `Flask` Applikation richtig ausführen kann, muss ein [requirments.txt](src/main/python/server/requirements.txt) erstellt werden, wleches alle Dependencies beinhaltet.
+    Damit nicht alle manuell eingegeben werden müssen, kann mit dem Befehl:
+    ```bash
+    pip freeze > requirements.txt
+    ```
+    alles gleich abgespeichert werden. 
+4.  git mit heroku verbinden
+    Um die Applikation auf Heroku sichtbar zu machen, muss folgender Befehl ausgeführt werden:
+    ```bash
+    heroku git:remote --app eecevit-flask
+    ```
+    Wobei hierbei wieder geachtet werden muss, dass der Projektname von vorher eingegeben werden muss.
+5.  Deployen
+    Dannach kann `git add . && git commit -a -m "Deploy Applikation." && git push heroku master`
+    
+    Wenn alles erfolgreich war, wird deine Applikation auf `https://<Projekt-Name>.herokuapp.com` zugänglich sein.
+    [https://eecevit-flask.herokuapp.com](https://eecevit-flask.herokuapp.com)
 # Quellen
 #### [Python](https://docs.python.org/3/)
 
