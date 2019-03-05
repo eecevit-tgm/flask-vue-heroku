@@ -12,6 +12,11 @@
     2. [Clients](#Clients)
         1. [VUEJs](#VUEJs)
         2. [JavaFX](#Java)
+    3.  [Authentifizierung](#Authentifizierung)
+        1.  [Flask](#Flask)
+            1. [HTTPBasicAuth](#HTTPBasicAuth)
+            2.  [Passwort](#Passwort)
+            3.  [Admin](#Admin)
 3. [Quellen](#Quellen)
 ## Aufgabenstellung
 Die detaillierte [Aufgabenstellung](TASK.md) beschreibt die notwendigen Schritte zur Realisierung.
@@ -217,6 +222,71 @@ Der Client gestartet werden.
 [] Java Tests
 
 [] Java UI Update
+
+## Authentifizierung
+### Flask
+#### HTTPBasicAuth
+Um eine Authentifizierung bei Flask durchführen zu können, wurde die Annotation
+`@auth.login_required`
+verwendet. Um diese Annotation verwenden zu können, muss das Modul `HTTPBasicAuth` von `flask_httpauth` importiert werden.
+
+Wenn vor jeder Methode, diese Annotation geschrieben wird, wird immer eine Authentifizierung erwartet, wenn diese nicht vorhanden ist, 
+kann die Methode nicht ausgeführt werden.
+
+Bei der Implementierung sieht wie folgt aus:
+```python
+@auth.login_required
+    def get(self, username):
+        return USERS
+```
+Jedoch muss davor noch festgelegt werden, wie sich der User verifizieren kann. Hierführ muss mit der
+Annotation `@auth.verify_password` eine Methode definiert werden, welches `True` oder `False` zurückgibt.
+
+Dies würde wie folgt aussehen:
+```python
+@auth.verify_password
+def verify(username, password):
+    if not (username and password):
+        return False
+    for user in USERS:
+        if user['username'] == username:
+            if verify_password(password, username):
+                checkAdmin(username)
+                return True
+```
+Hierbei wird überprüft, ob der User, der sich verifizieren will existiert, dannach ob das Passwort des Users
+korrekt eingegeben wurde.
+
+#### Passwort
+Damit die Passwörter nicht ersichtlich sind, werden diese in `sha256` gehased und abgespeichert. Hierbei wurde 
+das Modul `haslib` verwendet. 
+
+Das Hashen der Passwörter ist wie folgt:
+```python
+def hash_password(password):
+    pw_hash = hashlib.sha256(password.encode('utf-8'))
+    dig = pw_hash.hexdigest()
+    return dig
+```
+Bei dieser Methode, wird das Passwort in plain eingebenen, dieser Hased das Ganze und gibt es als
+`sha256` wieder zurück. 
+
+#### Admin
+Es soll nicht jeder Benutzer in der Lage sein, die Datenbank nach belieben zu ändern. Daher wurde jdem User
+ein weiterer Tag `admin` hinzugefügt. Wenn dieser `True` gesetzt ist, kann dieser User vorhande User Löschen und Updaten
+und neue User anlegen. 
+
+Die Überprüfung erfogt mit:
+```python
+def checkAdmin(username):
+    pos = abort_if_user_doesnt_exist(username)
+    if USERS[pos]['admin'] == "true":
+        return True
+    else:
+       return False
+``` 
+Hierbei wird ein username verlang, dann wird überpüft ob der Benutzer existiert. Wenn dieser existiert, 
+dann wird überprüft, ob dieser `admin` rechte hat. 
 
 # Quellen
 #### [Python](https://docs.python.org/3/)
