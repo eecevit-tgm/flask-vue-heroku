@@ -29,6 +29,10 @@ def hash_password(password):
     return dig
 
 
+def dehash(password):
+    return hashlib.sha256(password.encode()).hexdigest()
+
+
 def verify_password(password, username):
     for user in USERS:
         if username == user['username']:
@@ -42,3 +46,5 @@ USERS = reader()
 
 if __name__ == '__main__':
     print(verify_password(b'hallo', 'eecevit'))
+    print(hash_password(b'hallo'))
+    print(dehash('d3751d33f9cd5049c4af2b462735457e4d3baf130bcbb87f389e349fbaeb20b9'))

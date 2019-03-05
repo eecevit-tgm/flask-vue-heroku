@@ -216,10 +216,14 @@ class Todo(Resource):
             HTTP Status Code: 404
         """
         if checkAdmin(request.authorization["username"]):
-            args = parser.parse_args()
-            user = {'username': args['username'], 'email': args['email'], 'picture': args['picture'],
-                    'password': hash_password(args['password']), 'admin': args['admin']}
             pos = abort_if_user_doesnt_exist(username)
+            args = parser.parse_args()
+            if args['password'] != USERS[pos]['password']:
+                user = {'username': args['username'], 'email': args['email'], 'picture': args['picture'],
+                    'password': hash_password(args['password']), 'admin': args['admin']}
+            else:
+                user = {'username': args['username'], 'email': args['email'], 'picture': args['picture'],
+                        'password': args['password'], 'admin': args['admin']}
             USERS[pos] = user
             writer(USERS)
             return user, 201
