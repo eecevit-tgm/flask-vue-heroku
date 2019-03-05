@@ -178,6 +178,11 @@
                         placeholder="Enter password">
           </b-form-input>
         </b-form-group>
+        <b-form-group id="form-admin-edit-group">
+            <b-form-checkbox-group v-model="addUserForm.admin" id="form-edit-checks">
+              <b-form-checkbox value="true">Admin?</b-form-checkbox>
+            </b-form-checkbox-group>
+        </b-form-group>
         <b-button type="submit" variant="primary">Update</b-button>
         <b-button type="reset" variant="danger">Cancel</b-button>
       </b-form>
@@ -218,7 +223,7 @@ export default {
   },
   methods: {
     getUsers() {
-      const path = 'http://localhost:5000/users';
+      const path = 'https://eecevit-flask.herokuapp.com/users';
       axios.get(path, {
         auth: {
           username: this.uname,
@@ -234,7 +239,7 @@ export default {
         });
     },
     addUser(payload) {
-      const path = 'http://localhost:5000/users';
+      const path = 'https://eecevit-flask.herokuapp.com/users';
       axios.post(path, payload, {
         auth: {
           username: this.uname,
@@ -272,7 +277,7 @@ export default {
         });
     },
     removeUser(userID) {
-      const path = `http://localhost:5000/users/${userID}`;
+      const path = `https://eecevit-flask.herokuapp.com/users/${userID}`;
       axios.delete(path, {
         auth: {
           username: this.uname,
@@ -322,8 +327,8 @@ export default {
         username: this.editForm.username,
         email: this.editForm.email,
         picture: this.editForm.picture,
-        password: this.addUserForm.password,
-        admin: this.addUserForm.admin,
+        password: this.editForm.password,
+        admin: this.editForm.admin,
       };
       this.updateUser(payload, this.editForm.username);
     },
@@ -353,7 +358,7 @@ export default {
       this.check();
     },
     check() {
-      const path = `http://localhost:5000/user/${this.uname}`;
+      const path = `https://eecevit-flask.herokuapp.com/user/${this.uname}`;
       axios.get(path)
         .then((res) => {
           if (res.data[0] === 'true') {
