@@ -6,7 +6,7 @@
 
 """
 
-from flask import Flask
+from flask import Flask, request
 from flask_cors import CORS
 from flask_httpauth import HTTPBasicAuth
 from flask_restful import reqparse, abort, Api, Resource
@@ -83,8 +83,6 @@ def verify_password(password, username):
 ==============================
 """
 USERS = reader()
-isAdmin = False
-
 
 def abort_if_user_doesnt_exist(username):
     """
@@ -126,11 +124,14 @@ def verify(username, password):
                 return True
 
 
-def checkAdmin(check):
-    if check:
-        isAdmin = True
+def checkAdmin(username):
+    pos = abort_if_user_doesnt_exist(username)
+    if USERS[pos]['admin'] == "true":
+        return True
     else:
-        isAdmin = False
+       return False
+
+
 
 
 # Todo
@@ -187,9 +188,10 @@ class Todo(Resource):
         - Expected Fail Response::
             HTTP Status Code: 404
         """
-        if isAdmin:
+
+
+        if checkAdmin(request.authorization["username"]):
             pos = abort_if_user_doesnt_exist(username)
-            
             del USERS[pos]
             writer(USERS)
             return '', 204
@@ -213,11 +215,10 @@ class Todo(Resource):
         - Expected Fail Response::
             HTTP Status Code: 404
         """
-        if isAdmin:
+        if checkAdmin(request.authorization["username"]):
             args = parser.parse_args()
-            # name = args['user'].split(",")
             user = {'username': args['username'], 'email': args['email'], 'picture': args['picture'],
-                    'password': hash_password(args['password'])}
+                    'password': hash_password(args['password']), 'admin': args['admin']}
             pos = abort_if_user_doesnt_exist(username)
             USERS[pos] = user
             writer(USERS)
@@ -243,6 +244,7 @@ class TodoList(Resource):
                          "elshal": {"id": "4", "username": "eecevit", "email": "eecevit@student.tgm.ac.at", "picture": "...."}
                      }
         """
+
         return USERS
 
     @auth.login_required
@@ -264,8 +266,6 @@ class TodoList(Resource):
                      HTTP Status Code: 400
         """
         args = parser.parse_args()
-        # user_id = int(max(USERS.keys()).lstrip('user')) + 1
-        # user_id = 'user%i' % user_id
         user_id = len(USERS)
         USERS.append({'username': args['username'], 'email': args['email'], 'picture': args['picture'], 'password': hash_password(args['password']), 'admin': args['admin']})
         writer(USERS)
