@@ -1,30 +1,19 @@
 <template>
-
-  <div class="container">
+  <div>
+   <div>
+  <!-- Just an image -->
+      <b-navbar variant="faded" type="light">
+        <b-navbar-brand href="#">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRc872o4gWy9Sw8ZDaU3lv2CD3XOIqJf9d7ILR6x9IaGUDWaIk" width="
+           50" height="50" alt="TGM" />
+          <b-button variant="outline-success"
+                    class="my-2 my-sm-0"
+                    v-b-modal.login-modal>Login</b-button>
+        </b-navbar-brand>
+      </b-navbar>
+      </div>
     <div class="row">
-            <div class="col-sm-10">
-                      <h1>Login</h1>
-              <table class="table table-hover">
-                <thead>
-                <tr>
-                  <th scope="col">Username</th>
-                  <th scope="col">Password</th>
-                <th></th>
-                </tr>
-                </thead>
-                  <tbody>
-                    <td><input ref="loginname" placeholder="username"></td>
-                    <td><input type="password" ref="loginpass" placeholder="password"></td>
-                    <td><button type="button"
-                                class="btn btn-primary btn-sm"
-                                @click="login()">
-                        Login
-                        </button>
-                    </td>
-                  </tbody>
-              </table>
-
-            </div>
+      <div class="container">
       <div class="col-sm-10">
         <h1>Users</h1>
         <hr><br><br>
@@ -76,6 +65,36 @@
 
       </div>
     </div>
+
+      <b-modal ref="loginModal"
+               id = "login-modal"
+               user = "Login"
+               hide-footer>
+        <b-form @submit="login" @reset="onReset" class="w-100">
+          <b-form-group id="form-login-username-group"
+                      label="Username:"
+                      label-for="form-login-user-input">
+            <b-form-input id="form-login-username-input"
+                          type="text"
+                          v-model="log.username"
+                          required
+                          placeholder="Enter username">
+            </b-form-input>
+        </b-form-group>
+           <b-form-group id="form-login-password-group"
+                      label="Password:"
+                      label-for="form-login-password-input">
+          <b-form-input id="form-login-password-input"
+                        type="password"
+                        v-model="log.password"
+                        required
+                        placeholder="Enter Password">
+          </b-form-input>
+        </b-form-group>
+          <b-button type="submit" variant="primary">Submit</b-button>
+          <b-button type="reset" variant="danger">Reset</b-button>
+        </b-form>
+      </b-modal>
 
     <!-- add user modal -->
     <b-modal ref="addUserModal"
@@ -188,6 +207,7 @@
       </b-form>
     </b-modal>
   </div>
+    </div>
 </template>
 
 <script>
@@ -197,6 +217,10 @@ import Alert from './Alert';
 export default {
   data() {
     return {
+      log: {
+        username: '',
+        password: '',
+      },
       users: [],
       addUserForm: {
         username: '',
@@ -224,6 +248,7 @@ export default {
   methods: {
     getUsers() {
       const path = 'https://eecevit-flask.herokuapp.com/users';
+      const local = 'http://localhost:5000/users';
       axios.get(path, {
         auth: {
           username: this.uname,
@@ -231,6 +256,7 @@ export default {
         },
       })
         .then((res) => {
+          this.users = '';
           this.users = res.data;
         })
         .catch((error) => {
@@ -240,6 +266,7 @@ export default {
     },
     addUser(payload) {
       const path = 'https://eecevit-flask.herokuapp.com/users';
+      const local = 'http://localhost:5000/users';
       axios.post(path, payload, {
         auth: {
           username: this.uname,
@@ -259,6 +286,7 @@ export default {
     },
     updateUser(payload, userID) {
       const path = `https://eecevit-flask.herokuapp.com/users/${userID}`;
+      const local = `http://localhost:5000/users/${userID}`;
       axios.put(path, payload, {
         auth: {
           username: this.uname,
@@ -278,6 +306,7 @@ export default {
     },
     removeUser(userID) {
       const path = `https://eecevit-flask.herokuapp.com/users/${userID}`;
+      const local = `http://localhost:5000/users/${userID}`;
       axios.delete(path, {
         auth: {
           username: this.uname,
@@ -337,6 +366,11 @@ export default {
       this.$refs.addUserModal.hide();
       this.initForm();
     },
+    reset(evt) {
+      evt.preventDefault();
+      this.$refs.loginModal.hide();
+      this.initForm();
+    },
     onResetUpdate(evt) {
       evt.preventDefault();
       this.$refs.editUserModal.hide();
@@ -349,16 +383,19 @@ export default {
     editUser(user) {
       this.editForm = user;
     },
-    login() {
+    login(evt) {
+      evt.preventDefault();
+      this.$refs.loginModal.hide();
       this.uname = '';
       this.pass = '';
-      this.uname = this.$refs.loginname.value;
-      this.pass = this.$refs.loginpass.value;
+      this.uname = this.log.username;
+      this.pass = this.log.password;
       this.getUsers();
       this.check();
     },
     check() {
       const path = `https://eecevit-flask.herokuapp.com/user/${this.uname}`;
+      const local = `http://localhost:5000/users/${this.uname}`;
       axios.get(path)
         .then((res) => {
           if (res.data[0] === 'true') {
