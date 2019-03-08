@@ -4,6 +4,6 @@ pytest-html
 flask
 flask-restful
 flask-cors
-flask-httpauth
+flask_httpauth
 Werkzeug
 pytest-flask

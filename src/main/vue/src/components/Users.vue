@@ -21,7 +21,9 @@
         <h1 v-if=this.showUsers>Users</h1>
         <h1 v-if=this.showLogin>Please Login</h1>
         <hr><br><br>
-        <alert :message=message v-if="showMessage"></alert>
+        <div class="alert alert-success alert-dismissible" :message=message v-if="showMessage">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close" v-on:click="showMessage=false">&times;</a>
+              {{message}}</div><br>
         <button type="button"
                 class="btn btn-success btn-sm"
                 v-b-modal.user-modal
@@ -222,6 +224,7 @@ import Alert from './Alert';
 export default {
   data() {
     return {
+      editUsername: '',
       showUsers: false,
       showLogin: true,
       log: {
@@ -372,7 +375,7 @@ export default {
         password: this.editForm.password,
         admin: this.editForm.admin,
       };
-      this.updateUser(payload, this.editForm.username);
+      this.updateUser(payload, this.editUsername);
     },
     onReset(evt) {
       evt.preventDefault();
@@ -394,6 +397,7 @@ export default {
       this.removeUser(user.username);
     },
     editUser(user) {
+      this.editUsername = user.username;
       this.editForm = user;
     },
     login(evt) {
