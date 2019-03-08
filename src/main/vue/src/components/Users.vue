@@ -3,19 +3,23 @@
    <div>
   <!-- Just an image -->
       <b-navbar variant="faded" type="light">
-        <b-navbar-brand href="#">
+        <b-navbar-brand>
           <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRc872o4gWy9Sw8ZDaU3lv2CD3XOIqJf9d7ILR6x9IaGUDWaIk" width="
            50" height="50" alt="TGM" />
-          <b-button variant="outline-success"
+
+        </b-navbar-brand>
+        <b-navbar-nav>
+                    <b-button variant="outline-success"
                     class="my-2 my-sm-0"
                     v-b-modal.login-modal>Login</b-button>
-        </b-navbar-brand>
+        </b-navbar-nav>
       </b-navbar>
       </div>
     <div class="row">
       <div class="container">
       <div class="col-sm-10">
-        <h1>Users</h1>
+        <h1 v-if=this.showUsers>Users</h1>
+        <h1 v-if=this.showLogin>Please Login</h1>
         <hr><br><br>
         <alert :message=message v-if="showMessage"></alert>
         <button type="button"
@@ -25,9 +29,9 @@
                 Add User
         </button>
         <br><br>
-
+        <!-- Info field -->
         <!-- users table -->
-        <table class="table table-hover ">
+        <table class="table table-hover " v-if=showUsers>
           <thead>
             <tr>
               <th scope="col">Image</th>
@@ -40,7 +44,8 @@
           <tbody>
             <tr v-for="(user, index) in users" :key="index">
               <td><img :src="user.picture "
-                                   class="rounded-circle" width="50" height="50"/></td>
+                       class="rounded-circle" width="50" height="50"
+                       @error="imageLoadError(user)" /></td>
               <td>{{ user.username }}</td>
               <td>{{ user.email }}</td>
               <td>{{ user.admin }}</td>
@@ -217,6 +222,8 @@ import Alert from './Alert';
 export default {
   data() {
     return {
+      showUsers: false,
+      showLogin: true,
       log: {
         username: '',
         password: '',
@@ -246,10 +253,14 @@ export default {
     alert: Alert,
   },
   methods: {
+    imageLoadError(user) {
+      user.picture = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
+    },
+
     getUsers() {
       const path = 'https://eecevit-flask.herokuapp.com/users';
       const local = 'http://localhost:5000/users';
-      axios.get(path, {
+      axios.get(local, {
         auth: {
           username: this.uname,
           password: this.pass,
@@ -267,7 +278,7 @@ export default {
     addUser(payload) {
       const path = 'https://eecevit-flask.herokuapp.com/users';
       const local = 'http://localhost:5000/users';
-      axios.post(path, payload, {
+      axios.post(local, payload, {
         auth: {
           username: this.uname,
           password: this.pass,
@@ -287,7 +298,7 @@ export default {
     updateUser(payload, userID) {
       const path = `https://eecevit-flask.herokuapp.com/users/${userID}`;
       const local = `http://localhost:5000/users/${userID}`;
-      axios.put(path, payload, {
+      axios.put(local, payload, {
         auth: {
           username: this.uname,
           password: this.pass,
@@ -307,7 +318,7 @@ export default {
     removeUser(userID) {
       const path = `https://eecevit-flask.herokuapp.com/users/${userID}`;
       const local = `http://localhost:5000/users/${userID}`;
-      axios.delete(path, {
+      axios.delete(local, {
         auth: {
           username: this.uname,
           password: this.pass,
@@ -325,6 +336,8 @@ export default {
         });
     },
     initForm() {
+      this.log.username = '';
+      this.log.password = '';
       this.addUserForm.username = '';
       this.addUserForm.email = '';
       this.addUserForm.picture = '';
@@ -386,17 +399,18 @@ export default {
     login(evt) {
       evt.preventDefault();
       this.$refs.loginModal.hide();
-      this.uname = '';
-      this.pass = '';
       this.uname = this.log.username;
       this.pass = this.log.password;
-      this.getUsers();
+      this.showUsers = true;
+      this.showLogin = false;
       this.check();
+      this.getUsers();
+      this.initForm();
     },
     check() {
       const path = `https://eecevit-flask.herokuapp.com/user/${this.uname}`;
-      const local = `http://localhost:5000/users/${this.uname}`;
-      axios.get(path)
+      const local = `http://localhost:5000/user/${this.uname}`;
+      axios.get(local)
         .then((res) => {
           if (res.data[0] === 'true') {
             this.show = true;
@@ -412,7 +426,7 @@ export default {
     },
   },
   created() {
-    this.getUsers();
+    //this.getUsers();
   },
 };
 </script>

@@ -1,0 +1,9 @@
+pytest
+pytest-cov
+pytest-html
+flask
+flask-restful
+flask-cors
+flask-httpauth
+Werkzeug
+pytest-flask

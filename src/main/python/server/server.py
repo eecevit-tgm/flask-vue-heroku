@@ -84,6 +84,7 @@ def verify_password(password, username):
 """
 USERS = reader()
 
+
 def abort_if_user_doesnt_exist(username):
     """
     Check if user exists
@@ -98,19 +99,12 @@ def abort_if_user_doesnt_exist(username):
     abort(404, message="User {} doesn't exist")  # .format(username))
 
 
-USER_DATA = {
-    "admin": "SuperSecretPwd",
-    "test": "test"
-}
-
 parser = reqparse.RequestParser()
 parser.add_argument('username')
 parser.add_argument('email')
 parser.add_argument('picture')
 parser.add_argument('password')
 parser.add_argument('admin')
-
-
 
 
 @auth.verify_password
@@ -129,9 +123,7 @@ def checkAdmin(username):
     if USERS[pos]['admin'] == "true":
         return True
     else:
-       return False
-
-
+        return False
 
 
 # Todo
@@ -189,7 +181,6 @@ class Todo(Resource):
             HTTP Status Code: 404
         """
 
-
         if checkAdmin(request.authorization["username"]):
             pos = abort_if_user_doesnt_exist(username)
             del USERS[pos]
@@ -220,7 +211,7 @@ class Todo(Resource):
             args = parser.parse_args()
             if args['password'] != USERS[pos]['password']:
                 user = {'username': args['username'], 'email': args['email'], 'picture': args['picture'],
-                    'password': hash_password(args['password']), 'admin': args['admin']}
+                        'password': hash_password(args['password']), 'admin': args['admin']}
             else:
                 user = {'username': args['username'], 'email': args['email'], 'picture': args['picture'],
                         'password': args['password'], 'admin': args['admin']}
@@ -271,7 +262,8 @@ class TodoList(Resource):
         """
         args = parser.parse_args()
         user_id = len(USERS)
-        USERS.append({'username': args['username'], 'email': args['email'], 'picture': args['picture'], 'password': hash_password(args['password']), 'admin': args['admin']})
+        USERS.append({'username': args['username'], 'email': args['email'], 'picture': args['picture'],
+                      'password': hash_password(args['password']), 'admin': args['admin']})
         writer(USERS)
         return USERS[user_id], 201
 
@@ -282,6 +274,8 @@ class TodoList(Resource):
 api.add_resource(TodoList, '/users')
 api.add_resource(Todo, '/users/<username>')
 api.add_resource(Admin, '/user/<username>')
+# api.add_resource(UserCheck, '/login/<username>')
+
 
 if __name__ == '__main__':
     app.run()
