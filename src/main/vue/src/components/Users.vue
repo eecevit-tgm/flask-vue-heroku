@@ -77,7 +77,7 @@
                id = "login-modal"
                user = "Login"
                hide-footer>
-        <b-form @submit="login" @reset="onReset" class="w-100">
+        <b-form @submit="onSubmitLogin" @reset="onReset" class="w-100">
           <b-form-group id="form-login-username-group"
                       label="Username:"
                       label-for="form-login-user-input">
@@ -250,6 +250,7 @@ export default {
       showMessage: false,
       uname: '',
       pass: '',
+      valid: '',
     };
   },
   components: {
@@ -377,6 +378,31 @@ export default {
       };
       this.updateUser(payload, this.editUsername);
     },
+    onSubmitLogin(evt){
+      evt.preventDefault();
+      const payload = {
+        username: this.log.username,
+        password: this.log.password
+      };
+
+      this.checkValid(payload);
+      if(this.valid == true){
+        this.$refs.loginModal.hide();
+        this.showUsers = true;
+        this.showLogin = false;
+
+        this.uname = this.log.username;
+        this.pass = this.log.password;
+
+        this.checkAdmin();
+        this.getUsers();
+        this.initForm();
+      }else{
+        this.showUsers = false;
+        this.showLogin = true;
+        this.show = false;
+      }
+    },
     onReset(evt) {
       evt.preventDefault();
       this.$refs.addUserModal.hide();
@@ -391,7 +417,7 @@ export default {
       evt.preventDefault();
       this.$refs.editUserModal.hide();
       this.initForm();
-      this.getUsers(); // why?
+      this.getUsers(); 
     },
     onDeleteUser(user) {
       this.removeUser(user.username);
@@ -400,18 +426,24 @@ export default {
       this.editUsername = user.username;
       this.editForm = user;
     },
-    login(evt) {
-      evt.preventDefault();
-      this.$refs.loginModal.hide();
-      this.uname = this.log.username;
-      this.pass = this.log.password;
-      this.showUsers = true;
-      this.showLogin = false;
-      this.check();
-      this.getUsers();
-      this.initForm();
+    checkValid(payload){
+      const local = `http://localhost:5000/check`;
+      axios.post(local, payload)
+        .then((res) => {
+          console.log("ok haben jetzt den request gemacht");
+          console.log("res data:");
+          console.log(res.data);
+          console.log("jetzt kommt dann die gleichsetzung:");
+          this.valid = res.data;
+          console.log(this.valid);
+          //this.valid = res.data;
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+          console.error(error);
+        });
     },
-    check() {
+    checkAdmin() {
       const path = `https://eecevit-flask.herokuapp.com/user/${this.uname}`;
       const local = `http://localhost:5000/user/${this.uname}`;
       axios.get(local)
