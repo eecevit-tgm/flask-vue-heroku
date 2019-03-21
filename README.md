@@ -360,6 +360,39 @@ deplyed werden kann.
     
     Wenn alles erfolgreich war, wird deine Applikation auf `https://<Projekt-Name>.herokuapp.com` zugänglich sein.
     [https://eecevit-flask.herokuapp.com](https://eecevit-flask.herokuapp.com)
+
+#### VueDeployment
+
+Als nächstes muss die VUE-APP auf Heroku gepushed werden, damit man die Software funktionstüchtig verwenden kann. 
+
+1.  Eine Heroku App erstellen mit dem Befehl: `heroku create            <PROJEKT-NAME>`
+
+2.  damit VUE auf Heroku ausgeführt werden kann, muss ein kleines Script geschrieben werden, welches die VUE app ausführt. 
+
+    Dieses Script wird mit `express` geschrieben. Hierführ wird ein [server.js](src/main/vue/server.js) File erstellt. 
+
+    ```js
+    // server.js
+    var express = require('express');
+    var path = require('path');
+    var serveStatic = require('serve-static');
+
+    app = express();
+    app.use(serveStatic(__dirname + "/dist"));
+
+    var port = process.env.PORT || 5000;
+    app.listen(port);
+
+    console.log('server started '+ port);
+    ```
+
+    dannach `npm run build` und im [package.json](src/main/vue/package.json) File muss bei `scripts` ein `"start": "node server.js"` Befehl hinzugefügt werden.
+
+3.  Dannach muss Git initialisiert werden. Dannach muss heroku Git      dazugebunden werden mit dem Befehl `heroku git:remote --app         <PROJEKT-NAME>`
+
+4.  Dannach mit den Befehlen `git add . && git commit -a -m "Adding     files."` und `git push heroku master` ist die VUE-App               zugänglich auf           
+    https://eecevit-vue.herokuapp.com
+
 # Quellen
 #### [Python](https://docs.python.org/3/)
 
