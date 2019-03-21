@@ -268,7 +268,7 @@ export default {
     getUsers() {
       const path = 'https://eecevit-flask.herokuapp.com/users';
       const local = 'http://localhost:5000/users';
-      axios.get(local, {
+      axios.get(path, {
         auth: {
           username: this.uname,
           password: this.pass,
@@ -286,7 +286,7 @@ export default {
     addUser(payload) {
       const path = 'https://eecevit-flask.herokuapp.com/users';
       const local = 'http://localhost:5000/users';
-      axios.post(local, payload, {
+      axios.post(path, payload, {
         auth: {
           username: this.uname,
           password: this.pass,
@@ -306,7 +306,7 @@ export default {
     updateUser(payload, userID) {
       const path = `https://eecevit-flask.herokuapp.com/users/${userID}`;
       const local = `http://localhost:5000/users/${userID}`;
-      axios.put(local, payload, {
+      axios.put(path, payload, {
         auth: {
           username: this.uname,
           password: this.pass,
@@ -326,7 +326,7 @@ export default {
     removeUser(userID) {
       const path = `https://eecevit-flask.herokuapp.com/users/${userID}`;
       const local = `http://localhost:5000/users/${userID}`;
-      axios.delete(local, {
+      axios.delete(path, {
         auth: {
           username: this.uname,
           password: this.pass,
@@ -417,7 +417,7 @@ export default {
     },
     checkValid(payload){
       const local = `http://localhost:5000/check`;
-      axios.post(local, payload)
+      axios.post(path, payload)
         .then((res) => {
           this.valid = res.data;
 
@@ -454,7 +454,7 @@ export default {
     checkAdmin() {
       const path = `https://eecevit-flask.herokuapp.com/user/${this.uname}`;
       const local = `http://localhost:5000/user/${this.uname}`;
-      axios.get(local)
+      axios.get(path)
         .then((res) => {
           if (res.data[0] === 'true') {
             this.show = true;
