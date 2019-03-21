@@ -20,6 +20,9 @@
       <div class="col-sm-10">
         <h1 v-if=this.showUsers>Users</h1>
         <h1 v-if=this.showLogin>Please Login</h1>
+        <div class="alert alert-danger alert-dismissible" :message=message v-if="showMessageAlert">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close" v-on:click="showMessageAlert=false">&times;</a>
+              {{message}}</div>
         <hr><br><br>
         <div class="alert alert-success alert-dismissible" :message=message v-if="showMessage">
             <a href="#" class="close" data-dismiss="alert" aria-label="close" v-on:click="showMessage=false">&times;</a>
@@ -248,6 +251,7 @@ export default {
       },
       message: '',
       showMessage: false,
+      showMessageAlert: false,
       uname: '',
       pass: '',
       valid: '',
@@ -386,22 +390,7 @@ export default {
       };
 
       this.checkValid(payload);
-      if(this.valid == true){
-        this.$refs.loginModal.hide();
-        this.showUsers = true;
-        this.showLogin = false;
 
-        this.uname = this.log.username;
-        this.pass = this.log.password;
-
-        this.checkAdmin();
-        this.getUsers();
-        this.initForm();
-      }else{
-        this.showUsers = false;
-        this.showLogin = true;
-        this.show = false;
-      }
     },
     onReset(evt) {
       evt.preventDefault();
@@ -417,7 +406,7 @@ export default {
       evt.preventDefault();
       this.$refs.editUserModal.hide();
       this.initForm();
-      this.getUsers(); 
+      this.getUsers();
     },
     onDeleteUser(user) {
       this.removeUser(user.username);
@@ -430,12 +419,31 @@ export default {
       const local = `http://localhost:5000/check`;
       axios.post(local, payload)
         .then((res) => {
-          console.log("ok haben jetzt den request gemacht");
-          console.log("res data:");
-          console.log(res.data);
-          console.log("jetzt kommt dann die gleichsetzung:");
           this.valid = res.data;
-          console.log(this.valid);
+
+          if(this.valid === true){
+            this.showMessageAlert = false;
+
+            this.$refs.loginModal.hide();
+            this.showUsers = true;
+            this.showLogin = false;
+
+            this.uname = this.log.username;
+            this.pass = this.log.password;
+
+            this.checkAdmin();
+            this.getUsers();
+            this.initForm();
+          }else{
+            this.$refs.loginModal.hide();
+
+            this.showUsers = false;
+            this.showLogin = true;
+            this.show = false;
+
+            this.message = "FALSCHER USERNAME ODER PASSWORT!";
+            this.showMessageAlert = true;
+          }
           //this.valid = res.data;
         })
         .catch((error) => {

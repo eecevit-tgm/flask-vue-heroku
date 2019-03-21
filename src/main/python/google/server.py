@@ -278,8 +278,8 @@ class UserCheck(Resource):
     def post(self):
         args = parser.parse_args()
         pos = abort_if_user_doesnt_exist(args['username'])
-        if pos >= 0:
-            print(USERS[pos])
+
+        if pos <= 0:
             if USERS[pos]['password'] == hash_password(args['password']):
                 return jsonify(True)
             else:
