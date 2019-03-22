@@ -24,6 +24,7 @@
     1.  [Heroku](#Heroku)
         1.  [Implementierung](#Implementierung)
             1.  [Flask](#FlaskDeployment)
+            2.  [Vue](#VueDeployment)
 3. [Quellen](#Quellen)
 ## Aufgabenstellung
 Die detaillierte [Aufgabenstellung](TASK.md) beschreibt die notwendigen Schritte zur Realisierung.
@@ -409,5 +410,7 @@ Als nächstes muss die VUE-APP auf Heroku gepushed werden, damit man die Softwar
 #### [SceneBuilder](https://www.oracle.com/technetwork/java/javase/downloads/javafxscenebuilder-info-2157684.html)
 
 #### [Cypress](https://www.cypress.io/)
+
+#### [Heroku](https://www.heroku.com/)
 
 
